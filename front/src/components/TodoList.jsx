@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from 'react';
-import { Store, HOST_API } from '../App';
+import React, {useContext, useEffect} from 'react'
+import { HOST_API } from '../App';
 
-
-const TodoList = () => {
-    const { dispatch, state: { todo } } = useContext(Store);
+const List = (props) => {
+    const { dispatch, state: { todo } } = useContext(props.store);
     const currentList = todo.list;
   
     useEffect(() => {
@@ -16,7 +15,7 @@ const TodoList = () => {
   
   
     const onDelete = (id) => {
-      fetch(HOST_API + "/" + id + "/todo", {
+      fetch(HOST_API + "/todolist/" + id , {
         method: "DELETE"
       }).then((list) => {
         dispatch({ type: "delete-item", id })
@@ -32,8 +31,10 @@ const TodoList = () => {
         name: todo.name,
         id: todo.id,
         completed: event.target.checked
+
       };
-      fetch(HOST_API + "/todo", {
+     
+      fetch(HOST_API + "/actualizarLista", {
         method: "PUT",
         body: JSON.stringify(request),
         headers: {
@@ -62,15 +63,16 @@ const TodoList = () => {
           {currentList.map((todo) => {
             return <tr key={todo.id} style={todo.completed ? decorationDone : {}}>
               <td>{todo.id}</td>
-              <td>{todo.name}</td>
+              {todo.completed && <td>{todo.id}</td>}
+              {!todo.completed && <td>{todo.name}</td>}
               <td><input type="checkbox" defaultChecked={todo.completed} onChange={(event) => onChange(event, todo)}></input></td>
-              <td><button onClick={() => onDelete(todo.id)}>Eliminar</button></td>
-              <td><button onClick={() => onEdit(todo)}>Editar</button></td>
+              <td><button className="btn btn-danger" onClick={() => onDelete(todo.id)}>Eliminar</button></td>
+              <td><button className="btn btn-primary" onClick={() => onEdit(todo)}>Editar</button></td>
             </tr>
           })}
         </tbody>
       </table>
     </div>
-}
+  }
 
-export default TodoList;
+export default List
