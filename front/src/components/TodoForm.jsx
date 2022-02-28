@@ -57,7 +57,8 @@ const Form = (props) => {
         isCompleted: item.isCompleted
       };
   
-      if(request.name !== undefined && request.name !=="" && request.name.length < 3)  
+      //validaciones
+      if(request.name !== undefined && request.name !=="" && request.name.length > 3)  
       {
         fetch(props.HOST_API + "/actualizarLista", {
           method: "PUT",
